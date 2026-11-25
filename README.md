@@ -103,12 +103,6 @@ z = \frac{x_{\text{meas}} - x_{\text{pred}}}{\sqrt{\sigma_{\text{meas}}^2 + \sig
 
 The row "two-stage b against the ideal model" is meant to fail, because that failure is the evidence of loading. All 58 comparisons are listed in Appendix A of the report.
 
-## Open issues
-
-* **Single-stage control.** Circuit 1 cut off near 1.06 kHz instead of 1.54 kHz in both the sweep and the phase measurement. Its time constant was about 45 % above R1C1, so the circuit as recorded most likely differed from the diagram, for example through an extra capacitance of about 43 nF at the output. The two-stage filter built from the same first stage does not show this error.
-* **Buffered form.** Circuit 4 ran about 3 % high in frequency and 3 % low in gain in all three methods, so the change in c from loading was 10.8 % instead of the predicted 5 %. A follower gain slightly below 1, or a change in R3 or C4 when R3 was moved, could explain this.
-* **Low frequencies.** The planned comparison at 20 Hz could not be made, because a linear sweep spends too little time at low frequency to measure below about 50 Hz.
-
 ## Notes on the data
 
 These points matter for anyone who reuses the recordings:
