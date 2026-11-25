@@ -100,7 +100,7 @@ z = \frac{x_{\text{meas}} - x_{\text{pred}}}{\sqrt{\sigma_{\text{meas}}^2 + \sig
 | Single-stage cutoff, phase | 1133 ± 9 Hz | 1618 ± 34 Hz | −13.8 |
 | Generator resistance Rg | 64 ± 8 Ω | 50.0 ± 0.6 Ω | +1.7 |
 
-The row "two-stage b against the ideal model" is meant to fail, because that failure is the evidence of loading. All 58 comparisons are listed in Appendix A of the report.
+The row "two-stage b against the ideal model" is meant to fail, because that failure is the evidence of loading. All 58 comparisons are listed in Appendix A of the report, and `rc_filter_code/analysis.py` regenerates them in `out/comparison_table.csv`.
 
 ## Notes on the data
 
@@ -134,6 +134,7 @@ individual-screws/
     ├── rc_daq/rc_daq.ino                        # ESP32 firmware
     ├── daq.py                                   # records from the ESP32 straight to CSV
     ├── rcfilter.py                              # analysis library: models, Monte Carlo, fits, z-scores
+    ├── analysis.py                              # final analysis of the recorded data (reproduces the report)
     ├── analysis.ipynb                           # analysis pipeline as planned in the proposal
     ├── simulate_data.py                         # synthetic data set for testing the pipeline
     └── data/
@@ -145,23 +146,33 @@ individual-screws/
 
 ## Running the code
 
-1. Install Python 3 and the packages:
-
-   ```bash
-   pip install numpy scipy pandas matplotlib pyserial jupyter
-   ```
-
-2. Test the analysis pipeline on simulated data:
+1. **Set up Python 3.** A virtual environment keeps the packages separate from any system Python, including an older Python 2:
 
    ```bash
    cd rc_filter_code
+   python3 -m venv .venv
+   source .venv/bin/activate
+   python -m pip install numpy scipy pandas matplotlib pyserial jupyter
+   ```
+
+   On Windows, activate it with `.venv\Scripts\activate` instead.
+
+2. **Reproduce the final results.** From inside `rc_filter_code`, run:
+
+   ```bash
+   python analysis.py
+   ```
+
+   It takes about 10 seconds. It prints the calibration, the fits and the full comparison table, and it ends with `{'n': 58, 'n_within': 42}`. It also writes `out/comparison_table.csv` and `out/results.json`. This script handles the adjustments described in [Notes on the data](#notes-on-the-data) and produced every number in this README and in the report. It is also listed in Appendix B of the report.
+
+3. **Test the planned pipeline on simulated data.**
+
+   ```bash
    python simulate_data.py
    jupyter notebook analysis.ipynb
    ```
 
-   Keep `DATA = Path("data_sim")` and run all cells. The notebook ends with the full comparison table.
-
-3. **Final numbers.** `analysis.ipynb` is the pipeline as planned, which assumes logarithmic sweeps and the requested sampling rates. The recorded data needed the adjustments described in [Notes on the data](#notes-on-the-data), so the numbers in this README and in the report come from `analysis.py`, which is listed in full in Appendix B of the report.
+   Keep `DATA = Path("data_sim")` and run all cells. The notebook ends with the full comparison table. `analysis.ipynb` is the pipeline as planned before recording, which assumes logarithmic sweeps and the requested sampling rates, so use `analysis.py` for the recorded data. Both compute the same Monte Carlo predictions. If the notebook's kernel shows Python 2, start Jupyter with `.venv/bin/jupyter notebook analysis.ipynb` instead.
 
 4. **Recording new data.** Upload `rc_filter_code/rc_daq/rc_daq.ino` with the Arduino IDE (board "ESP32 Dev Module"), then follow the recording procedure. Request a sampling period the ADC can hold, for example 100 µs, so that the rate corrections are not needed. [rc_filter_code/README.md](rc_filter_code/README.md) lists every recording command.
 

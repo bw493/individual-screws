@@ -5,14 +5,16 @@
 | `rc_daq/rc_daq.ino` | ESP32 sketch: timer-paced single-pin stream for sweeps and two-pin bursts for everything else |
 | `daq.py` | Records from the sketch straight to CSV, including guided sets for the delay, phase and square-wave steps |
 | `rcfilter.py` | Analysis library: models, Monte Carlo predictions, calibration, sweeps, fits, phase, harmonics, z-scores |
-| `analysis.ipynb` | Notebook that follows Reading Data steps 1 to 7 and ends with the full comparison table |
+| `analysis.py` | Final analysis of the recorded data in `data/`, with per-file sampling rates, linear sweeps and windowed bursts. It reproduces every number in the report |
+| `analysis.ipynb` | Notebook that follows Reading Data steps 1 to 7 as planned (logarithmic sweeps at the requested sampling rates) and ends with the full comparison table. Use it with simulated data |
 | `simulate_data.py` | Writes a realistic fake data set, so the notebook can be run and checked before any recording |
 
 ## Setup
 
 1. Arduino IDE with the ESP32 board package (tested on cores 2.0.17 and 3.3.12). Board: "ESP32 Dev Module". Upload `rc_daq/rc_daq.ino`.
-2. Python packages: `pip install numpy scipy pandas matplotlib pyserial jupyter`.
+2. Python packages, in a Python 3 virtual environment: `python3 -m venv .venv`, then `source .venv/bin/activate`, then `python -m pip install numpy scipy pandas matplotlib pyserial jupyter`.
 3. Try the analysis first: `python simulate_data.py`, then open `analysis.ipynb` and run all cells. It should report 56 of 57 comparisons within 2σ (the failing row is the two-stage $b$ against the ideal model, which is the loading effect).
+4. Final results from the recorded data: `python analysis.py`. It should end with `{'n': 58, 'n_within': 42}` and writes `out/comparison_table.csv` and `out/results.json`.
 
 ## Wiring
 
@@ -31,7 +33,7 @@ GPIO 34 reads the input terminal (the generator side of R1 or C3) and GPIO 35 re
 | 4, phase points | `python daq.py --port COM5 phase-set --name lp1` (then `bpL`, `bpB`) | `phase/<name>_<f>Hz.csv` |
 | 5, square waves | `python daq.py --port COM5 square-set --name bpL` (then `bpB`) | `square/<name>_<n>.csv` |
 
-An 85 s recording always contains at least three complete 20 s sweeps, and the notebook finds and uses every complete sweep in each file. Then set `DATA = Path("data")` in the notebook and enter each part's own multimeter reading and the meter's stated accuracy in the components cell.
+An 85 s recording always contains at least three complete 20 s sweeps, and the analysis finds and uses every complete sweep in each file. For the recordings in `data/`, run `python analysis.py`. For new recordings made exactly as planned (logarithmic sweeps at the requested sampling rates), you can instead set `DATA = Path("data")` in the notebook. In either file, enter each part's own multimeter reading and the meter's stated accuracy in the components section.
 
 ### Using SerialPlot instead
 
