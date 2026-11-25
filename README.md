@@ -14,8 +14,7 @@ The full write-up is in [Physics 4BL Final Report.docx](Physics%204BL%20Final%20
 * The product (K/b)·Δf stayed between 1.5 and 1.7 kHz in both forms, so the bandwidth gained was paid for in peak gain.
 * The loaded filter passes the harmonics of a 500 Hz square wave more evenly (0.96, 0.85 and 0.74 of the fundamental for harmonics 3, 5 and 7, against 0.90, 0.67 and 0.52 for the buffered filter). The buffered filter passes more of every harmonic in absolute terms.
 * The two-stage low-pass filter shows the same loading term from the other side. Its fitted b excludes the unloaded model by 32σ, and its half-power frequency is 593 Hz rather than 1015 Hz.
-* Overall, 42 of 58 comparisons agree within 2σ, including 23 of 24 for the loaded band-pass filter. The main disagreements are listed under [Open issues](#open-issues).
-
+* Overall, 42 of 58 comparisons agree within 2σ, including 23 of 24 for the loaded band-pass filter.
 ## Circuits
 
 | Circuit 1: single-stage low-pass (control) | Circuit 2: two-stage low-pass, unbuffered |
