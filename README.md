@@ -135,8 +135,6 @@ individual-screws/
     ├── daq.py                                   # records from the ESP32 straight to CSV
     ├── rcfilter.py                              # analysis library: models, Monte Carlo, fits, z-scores
     ├── analysis.py                              # final analysis of the recorded data (reproduces the report)
-    ├── analysis.ipynb                           # analysis pipeline as planned in the proposal
-    ├── simulate_data.py                         # synthetic data set for testing the pipeline
     └── data/
         ├── calib/                               # sampling rate, channel delay, linearity, noise
         ├── sweeps/                              # ref, lp1, lp2, bpL, bpB
@@ -152,7 +150,7 @@ individual-screws/
    cd rc_filter_code
    python3 -m venv .venv
    source .venv/bin/activate
-   python -m pip install numpy scipy pandas matplotlib pyserial jupyter
+   python -m pip install numpy scipy pandas pyserial
    ```
 
    On Windows, activate it with `.venv\Scripts\activate` instead.
@@ -165,16 +163,7 @@ individual-screws/
 
    It takes about 10 seconds. It prints the calibration, the fits and the full comparison table, and it ends with `{'n': 58, 'n_within': 42}`. It also writes `out/comparison_table.csv` and `out/results.json`. This script handles the adjustments described in [Notes on the data](#notes-on-the-data) and produced every number in this README and in the report. It is also listed in Appendix B of the report.
 
-3. **Test the planned pipeline on simulated data.**
-
-   ```bash
-   python simulate_data.py
-   jupyter notebook analysis.ipynb
-   ```
-
-   Keep `DATA = Path("data_sim")` and run all cells. The notebook ends with the full comparison table. `analysis.ipynb` is the pipeline as planned before recording, which assumes logarithmic sweeps and the requested sampling rates, so use `analysis.py` for the recorded data. Both compute the same Monte Carlo predictions. If the notebook's kernel shows Python 2, start Jupyter with `.venv/bin/jupyter notebook analysis.ipynb` instead.
-
-4. **Recording new data.** Upload `rc_filter_code/rc_daq/rc_daq.ino` with the Arduino IDE (board "ESP32 Dev Module"), then follow the recording procedure. Request a sampling period the ADC can hold, for example 100 µs, so that the rate corrections are not needed. [rc_filter_code/README.md](rc_filter_code/README.md) lists every recording command.
+3. **Recording new data.** Upload `rc_filter_code/rc_daq/rc_daq.ino` with the Arduino IDE (board "ESP32 Dev Module"), then follow the recording procedure. Request a sampling period the ADC can hold, for example 100 µs, so that the rate corrections are not needed. [rc_filter_code/README.md](rc_filter_code/README.md) lists every recording command.
 
 ## Acknowledgments
 
